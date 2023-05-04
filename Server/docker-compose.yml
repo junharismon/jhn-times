@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+  service-orchestrator:
+    build: ./orchestrator-express
+    ports:
+      - '80:80'
+    environment:
+      - URL_MONGODB=http://service-user:4001
+      - URL_POSTGRES=http://service-app:4002
+  service-app:
+    build: ./Services/app
+    ports:
+      - '4002:4002'
+    environment:
+      - PASSWORD_REDIS=${PASSWORD_REDIS_USER}
+      - HOST_REDIS=${HOST_REDIS_USER}
+      - USERNAME=${USERNAME_REDIS}
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL}
+  service-user:
+    build: ./Services/Users
+    ports:
+      - '4001:4001'
+    environment:
+      - PASSWORD_REDIS_USER=${PASSWORD_REDIS_USER}
+      - HOST_REDIS_USER=${HOST_REDIS_USER}
+      - USERNAME_REDIS=${USERNAME_REDIS}
+      - URI_MONGO=${URI_MONGO}
